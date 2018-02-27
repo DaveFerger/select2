@@ -85,7 +85,7 @@ module.exports = function (grunt) {
           'dist/js/select2.full.js',
           'src/js/wrapper.end.js'
         ],
-        dest: 'dist/js/select2.full.js'
+        dest: '../Sites/phoenixszamlazo/vendor/kartik-v/yii2-widget-select2/assets/js/select2.full.js',
       }
     },
 

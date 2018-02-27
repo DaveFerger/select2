@@ -101,41 +101,48 @@ define([
     var self = this;
 
     this.data.current(function (selected) {
-      var selectedIds = $.map(selected, function (s) {
-        return s.id.toString();
-      });
+        var selectedIds = $.map(selected, function (s) {
+            return s.id.toString();
+        });
 
-      var $options = self.$results
-        .find('.select2-results__option[aria-selected]');
+        var $options = self.$results
+            .find('.select2-results__option[aria-selected]');
 
-      $options.each(function () {
-        var $option = $(this);
+        $options.each(function () {
+            var $option = $(this);
 
-        var item = $.data(this, 'data');
+            var item = $.data(this, 'data');
 
-        // id needs to be converted to a string when comparing
-        var id = '' + item.id;
+            // id needs to be converted to a string when comparing
+            var id = '' + item.id;
 
-        if ((item.element != null && item.element.selected) ||
-            (item.element == null && $.inArray(id, selectedIds) > -1)) {
-          $option.attr('aria-selected', 'true');
+            if ((item.element != null && item.element.selected) ||
+                (item.element == null && $.inArray(id, selectedIds) > -1)) {
+                $option.attr('aria-selected', 'true');
+            } else {
+                $option.attr('aria-selected', 'false');
+            }
+        });
+
+        var $selected = $options.filter('[aria-selected=true]');
+        var $forceHighlighted = $options.map(function () {
+            if ($(this).data('data').highlight)
+                return this;
+        });
+
+        // Check if there are any selected options
+        if ($forceHighlighted.length > 0) {
+            // If there are selected options, highlight the first
+            $forceHighlighted.first().trigger('mouseenter');
+        } else if ($selected.length > 0) {
+            // If there are selected options, highlight the first
+            $selected.first().trigger('mouseenter');
         } else {
-          $option.attr('aria-selected', 'false');
+            // If there are no selected options, highlight the first option
+            // in the dropdown
+            $options.first().trigger('mouseenter');
         }
-      });
-
-      var $selected = $options.filter('[aria-selected=true]');
-
-      // Check if there are any selected options
-      if ($selected.length > 0) {
-        // If there are selected options, highlight the first
-        $selected.first().trigger('mouseenter');
-      } else {
-        // If there are no selected options, highlight the first option
-        // in the dropdown
-        $options.first().trigger('mouseenter');
-      }
-    });
+    });    
   };
 
   Results.prototype.showLoading = function (params) {
@@ -441,6 +448,9 @@ define([
         originalEvent: evt,
         data: data
       });
+        
+      self.trigger('close', {})
+        
     });
 
     this.$results.on('mouseenter', '.select2-results__option[aria-selected]',

@@ -59,7 +59,8 @@ define([
     container.on('close', function () {
       self.$search.attr('tabindex', -1);
 
-      self.$search.val('');
+      if(typeof self.options.get('ajax') === 'undefined')
+        self.$search.val('');
     });
 
     container.on('results:all', function (params) {

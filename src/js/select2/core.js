@@ -257,6 +257,10 @@ define([
       self.$container.addClass('select2-container--open');
     });
 
+    this.on('focus', function () {
+      self.open();
+    });
+
     this.on('close', function () {
       self.$container.removeClass('select2-container--open');
     });
@@ -299,13 +303,13 @@ define([
       var key = evt.which;
 
       if (self.isOpen()) {
-        if (key === KEYS.ESC || key === KEYS.TAB ||
-            (key === KEYS.UP && evt.altKey)) {
+        if (key === KEYS.ESC || (key === KEYS.UP && evt.altKey)) {
           self.close();
 
           evt.preventDefault();
-        } else if (key === KEYS.ENTER) {
-          self.trigger('results:select', {});
+        } else if (key === KEYS.ENTER || key === KEYS.TAB) {
+          self.trigger('results:select');
+          self.close({keySelected: true, shiftKey: evt.shiftKey});
 
           evt.preventDefault();
         } else if ((key === KEYS.SPACE && evt.ctrlKey)) {
@@ -331,7 +335,8 @@ define([
       }
     });
   };
-
+    
+    
   Select2.prototype._syncAttributes = function () {
     this.options.set('disabled', this.$element.prop('disabled'));
 
@@ -400,15 +405,19 @@ define([
       return;
     }
 
-    this.trigger('query', {});
+    if( typeof this.options.get('ajax') !== 'undefined' && typeof this.dataAdapter._request !== 'undefined')
+      this.trigger('open', {});
+    else
+      this.trigger('query', {});
   };
 
-  Select2.prototype.close = function () {
+  Select2.prototype.close = function (params) {
     if (!this.isOpen()) {
       return;
     }
+    params = params || {};
 
-    this.trigger('close', {});
+    this.trigger('close', params);
   };
 
   Select2.prototype.isOpen = function () {

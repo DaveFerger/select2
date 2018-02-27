@@ -80,6 +80,8 @@ define([
 
         callback(results);
       }, function () {
+        if(self._request.status === 403)
+            location.reload;
         self.trigger('results:message', {
           message: 'errorLoading'
         });
