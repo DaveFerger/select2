@@ -109,7 +109,7 @@ module.exports = function (grunt) {
       },
       'dist.full': {
         src: 'dist/js/select2.full.js',
-        dest: 'dist/js/select2.full.min.js',
+        dest: '../Sites/phoenixszamlazo/vendor/kartik-v/yii2-widget-select2/assets/js/select2.full.min.js',
         options: {
           banner: minifiedBanner
         }
