@@ -308,7 +308,7 @@ define([
 
           evt.preventDefault();
         } else if (key === KEYS.ENTER || key === KEYS.TAB) {
-          self.trigger('results:select');
+          self.trigger('results:select', {keySelected: true, shiftKey: evt.shiftKey});
           self.close({keySelected: true, shiftKey: evt.shiftKey});
 
           evt.preventDefault();

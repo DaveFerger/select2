@@ -310,7 +310,7 @@ define([
       $highlighted.trigger('mouseup');
     });
 
-    container.on('results:select', function () {
+    container.on('results:select', function (params) {
       var $highlighted = self.getHighlightedResults();
 
       if ($highlighted.length === 0) {
@@ -318,9 +318,11 @@ define([
       }
 
       var data = $highlighted.data('data');
+        
+      params = params || {};
 
       if ($highlighted.attr('aria-selected') == 'true') {
-        self.trigger('close', {});
+        self.trigger('close', params);
       } else {
         self.trigger('select', {
           data: data
